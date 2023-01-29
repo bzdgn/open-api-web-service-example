@@ -1,0 +1,95 @@
+openapi: 3.0.3
+info:
+  title: Person Service
+  description: Public service for querying the persons
+  version: 1.0
+servers:
+  - description: Local development environment
+    url: http://localhost:8080/v1
+  - description: Kubernetes test environment
+    url: http://some-link-here.com/v1
+  - description: Kubernetes acc environment
+    url: http://some-link-here.com/v1
+  - description: Kubernetes production environment
+    url: http://some-link-here.com/v1
+
+paths:
+  /person/{id}:
+    get:
+      operationId: getPerson
+      tags:
+        - person
+      parameters:
+        - name: id
+          in: path
+          description: person id
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: Person results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        400:
+          description: not a valid person
+
+  /person:
+    get:
+      operationId: getPersons
+      tags:
+        - person
+      responses:
+        200:
+          description: Person results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonList'
+        400:
+          description: not a valid person
+
+    post:
+      operationId: addPerson
+      tags:
+        - person
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Person'
+      responses:
+        200:
+          description: Zoekresultaten
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        400:
+          description: not a valid person
+
+components:
+  schemas:
+    Person:
+      type: object
+      properties:
+        id:
+          required: true
+          description: id of the person
+          type: integer
+          format: int32
+        name:
+          description: name of the person
+          type: string
+        age:
+          description: age of the person
+          type: integer
+          format: int32
+    PersonList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Person' 
